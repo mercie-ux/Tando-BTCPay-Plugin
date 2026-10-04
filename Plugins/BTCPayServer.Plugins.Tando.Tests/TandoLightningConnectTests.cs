@@ -9,13 +9,12 @@ using BTCPayServer.Payments.Lightning;
 using BTCPayServer.Services.Invoices;
 using BTCPayServer.Tests;
 using Newtonsoft.Json;
-using Xunit;
 
-namespace Tando.Tests;
+namespace BTCPayServer.Plugins.Tando.Tests;
 
-public class TandoPluginTests : UnitTestBase
+public class TandoLightningConnectTests : UnitTestBase
 {
-    public TandoPluginTests(ITestOutputHelper helper) : base(helper)
+    public TandoLightningConnectTests(ITestOutputHelper helper) : base(helper)
     {
     }
 
