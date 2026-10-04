@@ -1,6 +1,5 @@
 using System;
 using System.Linq;
-using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using BTCPayServer.Abstractions.Constants;
@@ -9,6 +8,7 @@ using BTCPayServer.Client;
 using BTCPayServer.Data;
 using BTCPayServer.Payments;
 using BTCPayServer.Payments.Lightning;
+using BTCPayServer.Plugins.Tando.Helper;
 using BTCPayServer.Plugins.Tando.Services;
 using BTCPayServer.Plugins.Tando.ViewModels;
 using BTCPayServer.Services.Stores;
@@ -22,20 +22,19 @@ namespace BTCPayServer.Plugins.MassStoreGenerator;
 [Authorize(Policy = Policies.CanModifyStoreSettingsUnscoped, AuthenticationSchemes = AuthenticationSchemes.Greenfield)]
 [IgnoreAntiforgeryToken]
 public class TandoOnboardingController(StoreRepository storeRepository, TandoSubscriptionService subscriptionService, 
-    TandoProductProvisioningService productProvisioningService) : Controller
+    TandoProductProvisioningService productProvisioningService, TandoLightningProvisionerFactory lightningProvisionerFactor) : Controller
 {
     private const string PreferredRateSource = "bitcoinkenya";
     private const string DefaultCurrency = "KES";
     private const string PhoneMetadataKey = "tandoPhoneNumber";
     private const string PlanMetadataKey = "tandoSubscriptionPlanId";
 
-    private static readonly Regex KenyanMsisdn = new(@"^(?:\+254|0)([17]\d{8})$", RegexOptions.Compiled);
-
     [HttpGet("subscription/status")]
     public async Task<IActionResult> SubscriptionStatus([FromQuery] string phoneNumber)
     {
-        var normalizedPhone = NormalizePhone(phoneNumber, out var error);
-        if (normalizedPhone is null) return error!;
+        var normalizedPhone = KenyanPhoneNumber.Normalize(phoneNumber);
+        if (normalizedPhone == null)
+            return BadRequest(new { error = "invalid_phone_number", detail = "Expected a Kenyan MSISDN, e.g. 0712345678 or +254712345678." });
 
         var status = await subscriptionService.GetStatus(normalizedPhone);
         return Ok(status);
@@ -57,8 +56,9 @@ public class TandoOnboardingController(StoreRepository storeRepository, TandoSub
         if (string.IsNullOrWhiteSpace(request?.PhoneNumber))
             return BadRequest(new { error = "phone_number_required" });
 
-        var normalizedPhone = NormalizePhone(request.PhoneNumber, out var error);
-        if (normalizedPhone is null) return error!;
+        var normalizedPhone = KenyanPhoneNumber.Normalize(request.PhoneNumber);
+        if (normalizedPhone is null)
+            return BadRequest(new { error = "invalid_phone_number", detail = "Expected a Kenyan MSISDN, e.g. 0712345678 or +254712345678." });
 
         var status = await subscriptionService.GetStatus(normalizedPhone);
         if (!status.Configured)
@@ -134,30 +134,40 @@ public class TandoOnboardingController(StoreRepository storeRepository, TandoSub
         await storeRepository.UpdateStore(store);
     }
 
-    private string? NormalizePhone(string phoneNumber, out IActionResult? error)
-    {
-        var match = KenyanMsisdn.Match((phoneNumber ?? string.Empty).Trim());
-        if (!match.Success)
-        {
-            error = BadRequest(new { error = "invalid_phone_number", detail = "Expected a Kenyan MSISDN, e.g. 0712345678 or +254712345678." });
-            return null;
-        }
-        error = null;
-        return "254" + match.Groups[1].Value;
-    }
-
     [HttpPut("stores/{storeId}/lightning/connect")]
     public async Task<IActionResult> ConnectLightning(string storeId, [FromBody] TandoConnectLightningRequest request)
     {
-        if (string.IsNullOrWhiteSpace(request?.ConnectionString))
-            return BadRequest(new { error = "connection_string_required" });
+        string connectionString;
+        if (!string.IsNullOrWhiteSpace(request?.ConnectionString))
+        {
+            connectionString = request.ConnectionString;
+        }
+        else if (request?.LightningProvision is not null)
+        {
+            var provisioner = lightningProvisionerFactor.Get(request.LightningProvision.ProviderType);
+            if (provisioner is null)
+                return BadRequest(new { error = "unsupported_provider_type" });
 
-        var store = await storeRepository.FindStore(storeId);
+            var result = await provisioner.Provision(request.LightningProvision);
+            if (!result.IsSuccess)
+                return BadRequest(new { error = result.Error });
+
+            connectionString = result.ConnectionString!;
+        }
+        else
+        {
+            return BadRequest(new { error = "connection_string_required" });
+        }
+
+        var callerId = User.GetId();
+        var ownedStores = await storeRepository.GetStoresByUserId(callerId);
+        // 404, not 403: don't reveal to a non-owner whether storeId exists at all.
+        var store = ownedStores.FirstOrDefault(s => s.Id == storeId);
         if (store is null)
             return NotFound(new { error = "store_not_found" });
 
         var paymentMethodId = PaymentTypes.LN.GetPaymentMethodId("BTC");
-        var config = new LightningPaymentMethodConfig { ConnectionString = request.ConnectionString };
+        var config = new LightningPaymentMethodConfig { ConnectionString = connectionString };
         store.SetPaymentMethodConfig(paymentMethodId, JToken.FromObject(config));
         var blob = store.GetStoreBlob();
         blob.SetExcluded(paymentMethodId, false);

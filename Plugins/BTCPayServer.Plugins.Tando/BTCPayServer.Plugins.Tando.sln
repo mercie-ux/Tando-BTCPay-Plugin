@@ -1,26 +1,46 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.14.37314.3 d17.14
+VisualStudioVersion = 17.14.37314.3
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BTCPayServer.Plugins.Tando", "BTCPayServer.Plugins.Tando.csproj", "{0BFEF5C3-866D-3D81-D04B-DF85F4490D1F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tando.Tests", "..\..\Tando.Tests\Tando.Tests.csproj", "{B2C199A5-855A-4B5A-965E-3C4105E695E1}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BTCPayServer.Plugins.Tando.Tests", "..\BTCPayServer.Plugins.Tando.Tests\BTCPayServer.Plugins.Tando.Tests.csproj", "{EF3F308F-8C45-4203-AF5C-B9B51E7D5FFD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
 		Release|Any CPU = Release|Any CPU
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{0BFEF5C3-866D-3D81-D04B-DF85F4490D1F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{0BFEF5C3-866D-3D81-D04B-DF85F4490D1F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0BFEF5C3-866D-3D81-D04B-DF85F4490D1F}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{0BFEF5C3-866D-3D81-D04B-DF85F4490D1F}.Debug|x64.Build.0 = Debug|Any CPU
+		{0BFEF5C3-866D-3D81-D04B-DF85F4490D1F}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{0BFEF5C3-866D-3D81-D04B-DF85F4490D1F}.Debug|x86.Build.0 = Debug|Any CPU
 		{0BFEF5C3-866D-3D81-D04B-DF85F4490D1F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0BFEF5C3-866D-3D81-D04B-DF85F4490D1F}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B2C199A5-855A-4B5A-965E-3C4105E695E1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B2C199A5-855A-4B5A-965E-3C4105E695E1}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B2C199A5-855A-4B5A-965E-3C4105E695E1}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B2C199A5-855A-4B5A-965E-3C4105E695E1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0BFEF5C3-866D-3D81-D04B-DF85F4490D1F}.Release|x64.ActiveCfg = Release|Any CPU
+		{0BFEF5C3-866D-3D81-D04B-DF85F4490D1F}.Release|x64.Build.0 = Release|Any CPU
+		{0BFEF5C3-866D-3D81-D04B-DF85F4490D1F}.Release|x86.ActiveCfg = Release|Any CPU
+		{0BFEF5C3-866D-3D81-D04B-DF85F4490D1F}.Release|x86.Build.0 = Release|Any CPU
+		{EF3F308F-8C45-4203-AF5C-B9B51E7D5FFD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EF3F308F-8C45-4203-AF5C-B9B51E7D5FFD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EF3F308F-8C45-4203-AF5C-B9B51E7D5FFD}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{EF3F308F-8C45-4203-AF5C-B9B51E7D5FFD}.Debug|x64.Build.0 = Debug|Any CPU
+		{EF3F308F-8C45-4203-AF5C-B9B51E7D5FFD}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{EF3F308F-8C45-4203-AF5C-B9B51E7D5FFD}.Debug|x86.Build.0 = Debug|Any CPU
+		{EF3F308F-8C45-4203-AF5C-B9B51E7D5FFD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EF3F308F-8C45-4203-AF5C-B9B51E7D5FFD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EF3F308F-8C45-4203-AF5C-B9B51E7D5FFD}.Release|x64.ActiveCfg = Release|Any CPU
+		{EF3F308F-8C45-4203-AF5C-B9B51E7D5FFD}.Release|x64.Build.0 = Release|Any CPU
+		{EF3F308F-8C45-4203-AF5C-B9B51E7D5FFD}.Release|x86.ActiveCfg = Release|Any CPU
+		{EF3F308F-8C45-4203-AF5C-B9B51E7D5FFD}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

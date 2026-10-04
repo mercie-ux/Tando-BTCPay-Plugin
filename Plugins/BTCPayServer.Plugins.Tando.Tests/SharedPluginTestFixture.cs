@@ -1,0 +1,61 @@
+﻿using BTCPayServer.Tests;
+
+namespace BTCPayServer.Plugins.Tando.Tests;
+
+public class ConfigurablePluginTestFixture : IDisposable
+{
+    private readonly string _testDirName;
+    private readonly bool _useNewDb;
+
+    public ConfigurablePluginTestFixture(string testDirName = "SharedPluginTests", bool useNewDb = true)
+    {
+        _testDirName = testDirName;
+        _useNewDb = useNewDb;
+    }
+
+    public ServerTester ServerTester { get; private set; }
+
+    public void Dispose()
+    {
+        ServerTester?.Dispose();
+        ServerTester = null;
+    }
+
+    public void Initialize(PlaywrightBaseTest testInstance)
+    {
+        if (ServerTester == null)
+        {
+            var testDir = Path.Combine(Directory.GetCurrentDirectory(), _testDirName);
+            ServerTester = testInstance.CreateServerTester(testDir, _useNewDb);
+            ServerTester.PayTester.LoadPluginsInDefaultAssemblyContext = true;
+            ServerTester.StartAsync().GetAwaiter().GetResult();
+        }
+    }
+}
+
+// Specific fixture implementations for different collections
+public class SharedPluginTestFixture : ConfigurablePluginTestFixture
+{
+    public SharedPluginTestFixture() : base() { }
+}
+
+[CollectionDefinition("Plugin Tests")]
+public class PluginTestCollection : ICollectionFixture<SharedPluginTestFixture>
+{
+    // This class has no code, and is never created. Its purpose is simply
+    // to be the place to apply [CollectionDefinition] and all the
+    // ICollectionFixture<> interfaces.
+}
+
+public class StandalonePluginTestFixture : ConfigurablePluginTestFixture
+{
+    public StandalonePluginTestFixture() : base("StandalonePluginTests") { }
+}
+
+[CollectionDefinition("Standalone Tests")]
+public class StandaloneTestCollection : ICollectionFixture<StandalonePluginTestFixture>
+{
+    // This class has no code, and is never created. Its purpose is simply
+    // to be the place to apply [CollectionDefinition] and all the
+    // ICollectionFixture<> interfaces.
+}
