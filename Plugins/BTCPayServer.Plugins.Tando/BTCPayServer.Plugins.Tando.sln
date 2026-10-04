@@ -5,6 +5,8 @@ VisualStudioVersion = 17.14.37314.3 d17.14
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BTCPayServer.Plugins.Tando", "BTCPayServer.Plugins.Tando.csproj", "{0BFEF5C3-866D-3D81-D04B-DF85F4490D1F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tando.Tests", "..\..\Tando.Tests\Tando.Tests.csproj", "{B2C199A5-855A-4B5A-965E-3C4105E695E1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{0BFEF5C3-866D-3D81-D04B-DF85F4490D1F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0BFEF5C3-866D-3D81-D04B-DF85F4490D1F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0BFEF5C3-866D-3D81-D04B-DF85F4490D1F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B2C199A5-855A-4B5A-965E-3C4105E695E1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B2C199A5-855A-4B5A-965E-3C4105E695E1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B2C199A5-855A-4B5A-965E-3C4105E695E1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B2C199A5-855A-4B5A-965E-3C4105E695E1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
